@@ -2,8 +2,11 @@ package main
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -21,6 +24,9 @@ func main() {
 
 	updates, err := bot.GetUpdatesChan(u)
 
+	questions := readFile()
+	text := "Пробный текст"
+
 	for update := range updates {
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
@@ -28,9 +34,19 @@ func main() {
 
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, text+sampleQuestion(questions))
 		msg.ReplyToMessageID = update.Message.MessageID
 
 		bot.Send(msg)
 	}
+}
+
+func readFile() []string {
+	data, _ := ioutil.ReadFile("Questions.txt")
+	return strings.Split(string(data), "\n")
+}
+
+func sampleQuestion(questions []string) string {
+	number := rand.Intn(len(questions) - 1)
+	return questions[number]
 }
