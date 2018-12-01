@@ -25,7 +25,7 @@ func main() {
 	updates, err := bot.GetUpdatesChan(u)
 
 	questions := readFile()
-	text := "Пробный текст"
+	text := "Подними руку и помаши или поищи глазами человека, который уже поднял руку. Обсудите вопрос. Начни сначала прислав мне любое сообщение. Удачи :) \n"
 
 	for update := range updates {
 		if update.Message == nil { // ignore any non-Message Updates
